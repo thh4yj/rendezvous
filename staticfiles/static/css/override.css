@@ -1,0 +1,87 @@
+/*
+override.css
+
+These styles are meant to override Bootstrap classes to add custom CSS functionality (i.e transitions)
+
+Table of contents:
+1 - Primary Button Properties
+2 - Navbar photo properties
+3 - Card
+4- Map
+*/
+
+/* 1 - Primary Button Properties */
+
+#btn-primary {
+    color: white;
+    background-color:#e57200;
+    transition: all 0.2s;
+}
+
+#btn-primary:hover {
+    background: #EB5F0C;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* 2- Navbar photo*/
+#navbar-photo {
+    width: 40px; 
+    height: auto; 
+    border-radius: 100%; 
+    border: 3px solid #e57200
+}
+
+@media(max-width: 990px) {
+    #navbar-photo {
+        width: 0px;
+        height: 0px;
+        border: 0px;
+    }
+}
+
+/* 3 - Card */
+#card {
+    border: 1px solid #cccccc;
+    transition: all 0.2s;
+}
+
+#card:hover {
+    border: 1px solid #e57200;
+}
+
+/* 3 - Map */
+#map {
+    border: 2px solid #cccccc;
+    padding: 10px;
+    transition: all 0.2s;
+}
+
+#map:hover {
+    border: 2px solid #e57200;
+}
+
+/* 4 - Icon */
+#icon {
+    transition: all 0.2s;
+}
+
+#icon:hover {
+    padding: 1px;
+}
+
+/* 5 - Logo */
+#logo {
+    transition: all 0.2s;
+}
+
+#logo:hover {
+    filter: brightness(50%);
+}
+
+
+#hiddenTag{
+    display:none;
+}

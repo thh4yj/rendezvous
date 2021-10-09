@@ -1,0 +1,46 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% block content %}
+<h2 class = "text-center m-4 font-weight-light" style = "color: #666666;">Create an Event</h2>
+
+{% if error_message %}
+    <div class="alert alert-danger w-25 mx-auto text-center" role="alert">
+        {{error_message}}
+    </div>
+{% endif %}
+
+<form action = "{% url 'create-event' %}" enctype = "multipart/form-data" class = "container-fluid" method = "post">
+    {% csrf_token %}
+    <p class = "text-center" style = "color: #666666;">Event Title</p>
+    <div class = "row form-group">
+        <input class="mx-auto form-control w-50" type="text" name="eventName" placeholder = "Title">
+    </div>
+    <p class = "text-center" style = "color: #666666;">Location (valid address)</p>
+    <div class = "row form-group">
+        <input class="mx-auto form-control w-50" type="text" name="eventLocation" placeholder = "Address">
+    </div>
+    <p class = "text-center" style = "color: #666666;">Event Icon/Logo</p>
+    <div class = "row form-group">
+        <input class = "mx-auto form-control w-25" type = "file" name = "eventIcon">
+    </div>
+    <p class = "text-center" style = "color: #666666;">Event Information</p>
+    <div class = "row form-group">
+        <textarea class="mx-auto mt-2 form-control w-75" name = "eventDesc" rows="10" placeholder = "Description"></textarea>
+    </div>
+    <div class = "row form-group w-50 mx-auto">
+        <div class = "col">
+            <p class = "text-center" style = "color: #666666;">Start Date</p>
+            <input class="mx-auto form-control" type="datetime-local" name="eventStart" value="2020-10-21T20:00">
+        </div>
+        <div class = "col">
+            <p class = "text-center" style = "color: #666666;">End Date</p>
+            <input class="mx-auto form-control" type="datetime-local" name="eventEnd" value="2020-10-21T20:00">
+        </div>
+    </div>
+    <div class = "row form-group">
+        <input id = "btn-primary" class="mx-auto mt-2 btn text-white" type="submit" value="Post Event">
+    </div>
+</form>
+
+{% endblock %}

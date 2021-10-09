@@ -1,0 +1,93 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% load static %}
+
+{% block content %}
+
+<h2 class = "text-center m-4 font-weight-light" style = "color: #666666;">{{event.title}}</h2>
+<div class = "container-fluid px-5">
+    <div class = "row">
+        <div class = "col px-5">
+            <div class = "row px-1" style = "border: 1px solid #cccccc; border-radius: 2px;">
+                <div class = "container-xs m-auto">
+                    <div class = "col-3">
+                        {% if event.icon %}
+                            <img src = "{{event.icon.url}}" id = "icon" class = "my-3" style = "width: 150px; height: 150px; object-fit: cover; border-radius: 2px;" alt = "Event icon">
+                        {% else %}
+                            <img src = "{% static 'img/icon.jpg' %}" id = "icon" class = "my-3" style = "width: 120px; height: 120px; object-fit: cover; border-radius: 2px;" alt = "Event icon">
+                        {% endif %}      
+                    </div>
+                </div>
+                <div class = "col-9 mx-auto">
+                    <h6 class = "text-center font-weight-light m-3"><strong>Location:</strong> {{event.location_name}}</h5>
+                    {% if event.address %}
+                        <h6 class = "text-center font-weight-light m-3"><strong>Address:</strong> {{event.address}}</h5>
+                    {% else %}
+                        <h6 class = "text-center font-weight-light m-3"><strong>Address:</strong> N/A</h5>
+                    {% endif %}
+                    <h6 class = "text-center font-weight-light m-3"><strong>Start Time:</strong> {{event.start}}</h5>
+                    <h6 class = "text-center font-weight-light m-3"><strong>End Time:</strong> {{event.end}}</h5>          
+                    <h6 class = "text-center font-weight-light m-3"><strong>RSVPs:</strong> {{event.rsvps}}</h5>        
+                </div>
+            </div>
+            <div class = "row">
+                <p class = "font-weight-light m-3 w-100 p-2" style = "min-height: 250px; border: 1px solid #cccccc; border-radius: 2px;">{{event.desc}}</p>
+            </div>
+            <div class = "row">
+                {% if user.is_authenticated %}
+                    {% if user.username in event.people_going %}
+                        <form id = "undoForm" action = "/events/rsvp/{{event.pk}}" method ="get" class = "form-inline mx-auto" >
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="undo" />
+                            <button id ="btn-primary"  onclick = "return confirm('Are you sure you want remove your RSVP from this event?');" onsubmit = "undoForm.submit()"  name = "undoRSVP" class = "btn text-white" style = "margin-left: 10px; margin-right: 10px">Undo RSVP</button>
+                        </form>
+                    {% else %}
+                        <form id = "rsvpForm" action = "/events/rsvp/{{event.pk}}" method ="get" class = "form-inline mx-auto" >
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="rsvp" />
+                            <button id ="btn-primary" onsubmit = "rsvpForm.submit()"  name = "rsvpButton" class = "btn text-white" style = "margin-left: 10px; margin-right: 10px">RSVP</button>
+                        </form>
+                    {% endif %}
+                    <!--<script>-->
+                        <!--var user = "{% static user.username %}"-->
+                        <!--var event_people_going = "{% static event.people_going %}"-->
+                        <!--event_people_going = event_people_going.replace(/&#x27;/g,'"').replace(/\/static\//g, '');-->
+                        <!--event_people_going = JSON.parse(event_people_going); //add double quotes to become json objects-->
+                        <!--user = user.replace(/\/static\//g, '')-->
+                        <!--if (event_people_going.includes(user)){-->
+                             <!--//document.write('<button id = "btn-primary" href = \'/events/rsvp/{{ event.pk }}\'" type = "button" class = "btn text-white my-4 mx-auto" disabled>Already RSVP</button>');-->
+                        <!--}-->
+                        <!--else{-->
+                           <!--// document.write('<a id = "btn-primary" href = \'/events/rsvp/{{ event.pk }}\'" type = "button" class = "btn text-white my-4 mx-auto">RSVP</a>');-->
+                        <!--}-->
+                    <!--</script>-->
+                {% endif %}
+                {% ifequal request.user event.author %}
+                    <form id = "deleteForm" action = "/events/delete" method ="get" class = "form-inline mx-auto" >
+                        {% csrf_token %}
+                        <input type="hidden" name="eventId" value="{{event.id}}" />
+                        <button id ="btn-primary"  onclick = "return confirm('Are you sure you want to delete your event?');" onsubmit = "deleteForm.submit()"  name = "deleteButton" class = "btn text-white" style = "margin-left: 10px; margin-right: 10px">Delete Event</button>
+                    </form>
+                    <form id = "editForm" action = "/events/editEvent" method = "get" class = "form-inline mx-auto">
+                        {% csrf_token %}
+                        <input type="hidden" name="eventId" value="{{event.id}}" />
+                        <button id ="btn-primary" onsubmit = "editForm.submit()"  name = "editButton" class = "btn text-white" style = "margin-left: 10px; margin-right: 10px">Edit Event</button>
+                    </form>
+                {% endifequal %}
+            </div>
+        </div>
+        <div class = "col px-5">
+            <!--Google Maps-->
+            <div id="map" style="width: 100%; height: 75vh;"></div>
+            {% if event_json %}
+              <!--{{event_json}}-->
+                <script>
+                    var event_json = "{% static event_json %}"
+                </script>
+                <script type="text/javascript" src = "{% static 'scripts/map.js' %}"></script>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

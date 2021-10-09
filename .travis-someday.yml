@@ -1,0 +1,20 @@
+language: python
+python:
+- '3.8'
+install:
+- pip install -r requirements-travis.txt
+- pip install django-allauth
+script:
+- python manage.py test
+services:
+- postgresql
+before_script:
+- psql -c 'create database travis_ci_test;' -U postgres
+deploy:
+  provider: heroku
+  api_key:
+    secure: S+FhiEyzOiuFAEjveo3ZUXKkXpsCF1jFTg6MZG9yR/tpv53ArHcUA6uNRbvycmepvfZBDiQKaDspvOanpyYXzmx5ldQsUv6LMm9a71j1guZ/pUJhWKwNlpvZD4EfS0YfbukdhrEBzqn997Y3QFb11DcEVzBZorCKodp3awz9LMcWfgyt1XQshqRsgyRkh6I7SD5waX6XJLXy+w8RdqOBHQcFqcvSLDANu2VrW0rAeZ63jFIrvbs0z0u8Jo2CDx7lZqhx4JLJr5aJ+RzKFI93qav7u7Sy8/U8VNOxiXif+VhSs2GWqRi6ZNtiE+yDBIL+5zFic8LVL5I0fyGChDvj2xqfewsx5hUCV2geLXOYHAuzTrkz0wirLX9G9rPDjRYcRbcljZi/o0XEMb1IyGny0VmbxWHnMT3fAufNINakp7be15KtwARiJSsDsuHzp65Y9rJvPLyym9xOopcX5mOWqur5vI3NZdFRKUxk9ACFuyCahUiebVNUPsORyIL11rcO69XOigWJLUi0UnMPyUFVbTmtZDXZOxUE914a9ZN/qsvVK3c7uObYGKpjLcq1i0+bXhDewbP/hldizRaDn+yUyPp5ZNbYzicCWOYPRrAvKfKgxEffnBtDV8JqT0gPh2rNnfhqKruh75CvKql5H8n82SYu16PYfv0p6z38P+MpiZ8=
+  app: project-2-16
+  on:
+    repo: uva-cs3240-f20/project-2-16-1
+

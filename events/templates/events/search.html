@@ -1,0 +1,29 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% load static %}
+{% block content %}
+
+<h2 class = "text-center font-weight-light mt-4" style = "color: #666666;">Event Search for '{{search}}'</h2>
+{% if event_list %}
+    {% for event in event_list %}
+    <div id = "card" onclick = "window.location.href = '/events/{{ event.pk }}'" style = "cursor: pointer;" class="card bg-dark text-white w-75 mx-auto my-3">
+        {% if event.icon %}
+            <img class="card-img-left" src="{{event.icon.url}}" style = "object-fit: cover; width: 100%; height: 200px; filter: brightness(50%)" alt="Card image cap">
+        {% else %}
+            <img class="card-img-left" src="{% static 'img/icon.jpg' %}" style = "object-fit: cover; width: 100%; height: 200px; filter: brightness(50%)" alt="Card image cap">
+        {% endif %}   
+        <div class="card-img-overlay">
+          <h5 class="card-title">{{event.title}}</h5>
+          <p class="card-text">{{event.location_name}}</p>
+          <p class="card-text">{{event.desc|slice:"0:200"}}...</p>
+          <p class="card-text">{{event.pub_date}}</p>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<h4 class = "text-center my-auto py-5" style = "color: #666666;">No events are available for given search terms.</h4>
+{% endif %}
+
+{% endblock %}
+

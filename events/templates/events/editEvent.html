@@ -1,0 +1,59 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% load socialaccount %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<h2 class = "text-center m-4 font-weight-light" style = "color: #666666;">Edit Your Event</h2>
+
+{% if context.error_message %}
+    <div class="alert alert-danger w-25 mx-auto text-center" role="alert">
+        {{context.error_message}}
+    </div>
+{% endif %}
+
+
+<form action = "{% url 'submitEdit' %}" enctype = "multipart/form-data" class = "container-fluid" method = "post">
+    {% csrf_token %}
+    <p class = "text-center" style = "color: #666666;">Event Title</p>
+    <div class = "row form-group flex justify-content-center">
+        {{context.form.title}}
+    </div>
+    <p class = "text-center" style = "color: #666666;">Event Icon/Logo</p>
+    <div class = "row form-group flex justify-content-center">
+        {{context.form.icon}}
+    </div>
+    <div class = "row form-group flex justify-content-center">
+        <div class = "px-3">
+            <p class = "text-center" style = "color: #666666;">Event Location</p>
+            {{context.form.location_name}}
+        </div>
+        <div class = "px-3">
+            <p class = "text-center" style = "color: #666666;">Address (optional)</p>
+            {{context.form.address}}
+        </div>
+    </div>
+    <p class = "text-center" style = "color: #666666;">Event Information</p>
+    <div class = "row form-group flex justify-content-center">
+        {{context.form.desc}}
+    </div>
+    <div class = "row form-group flex justify-content-center">
+        <div class = "px-3">
+            <p class = "text-center" style = "color: #666666;">Start Date</p>
+            {{context.form.start}}
+        </div>
+        <div class = "px-3">
+            <p class = "text-center" style = "color: #666666;">End Date</p>
+            {{context.form.end}}
+        </div>
+    </div>
+    <div class = "row form-group">
+            <input type="hidden" name="event_id" value={{context.eventId}} />
+        <input id = "btn-primary" class="mx-auto mt-2 btn text-white" type="submit" value="Submit Edit">
+    </div>
+</form>
+{% else %}
+    <script>window.location.href = "../../";</script> # Users must be logged in to create an event. Redirects them to the home screen if they are not.
+{% endif %}
+{% endblock %}

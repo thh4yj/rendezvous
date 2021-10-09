@@ -1,0 +1,88 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% load static %}
+
+{% block content %}
+  <div class = "content">
+      <div class = "container-fluid mt-2" style = "min-height: 80vh;">
+        <div class = "row px-4">
+          <div class = "col-6 text-center pl-4">
+            <h2 class = "text-center mt-2 font-weight-light" style = "color: #666666;">Upcoming Events</h2>
+            {% if event_list %}
+              <div class = "container">
+              <div class = "row">
+                {% for event in event_list %}
+                <div class = "col mx-auto my-2">
+                  <div id = "card" class="card mx-auto" style="width: 18rem;">
+                    {% if event.icon %}
+                      <img class="card-img-left" src="{{event.icon.url}}" style = "object-fit: cover; width: 100%; height: 200px" alt="Card image cap">
+                    {% else %}
+                      <img class="card-img-left" src="{% static 'img/icon.jpg' %}" style = "object-fit: cover; width: 100%; height: 200px" alt="Card image cap">
+                    {% endif %}   
+                    <div class="card-body">
+                      <h5 class="card-title">{{event.title}}</h5>
+                      <p class="card-text">{{event.desc|slice:"0:50"}}...</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                      <li class="list-group-item">{{event.location_name}}</li>
+                      <li class="list-group-item">{{event.start}}</li>
+                    </ul>
+                    <div class="card-body">
+                      <div class = "row row justify-content-center">
+                      <a href="/events/{{ event.pk }}" class="btn btn-primary my-2 mr-2 ">See More</a>
+                      {% if user.is_authenticated %}
+                      {% if user.username in event.people_going %}
+                        <form id = "undoForm" action = "/events/rsvp/{{event.pk}}" method ="get" class = "form-inline">
+                            {% csrf_token %}
+                            <input class = "hiddenTag" type="hidden" name="action" value="undo" />
+                            <button  class = "btn btn-primary disabled "  onclick = "return confirm('Are you sure you want remove your RSVP from this event?');" onsubmit = "undoForm.submit()"  name = "undoRSVP" ><i>Going</i></button>
+                        </form>
+                    {% else %}
+                        <form id = "rsvpForm" action = "/events/rsvp/{{event.pk}}" method ="get" >
+                            {% csrf_token %}
+                            <input class = "hiddenTag" type="hidden" name="action" value="rsvp" />
+                            <button onsubmit = "rsvpForm.submit()"  name = "rsvpButton" class = "btn btn-primary ml-2 my-2">RSVP</button>
+                        </form>
+                    {% endif %}
+                        <script>
+                          <!--var user = "{% static user.username %}"-->
+                          <!--var event_people_going = "{% static event.people_going %}"-->
+                          <!--event_people_going = event_people_going.replace(/&#x27;/g,'"').replace(/\/static\//g, '');-->
+                          <!--event_people_going = JSON.parse(event_people_going); //add double quotes to become json objects-->
+                          <!--user = user.replace(/\/static\//g, '')-->
+                          <!--if (event_people_going.includes(user)){-->
+                            <!--//document.write('<a type = "button" class = "btn btn-primary ml-2 my-2 disabled"><i>Going</i></a>');-->
+                          <!--} else{-->
+                            <!--//document.write('<a href = \'/events/rsvp/{{ event.pk }}\'" type = "button" class = "btn btn-primary">RSVP</a>');-->
+                          <!--}-->
+                        </script>
+                      {% endif %}
+                        </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              </div>
+            {% else %}
+              <h4 class = "text-center my-auto py-5" style = "color: #666666;">No events are available.</h4>
+            {% endif %}
+            <a id = "btn-primary" href = "events" type = "button" class = "btn text-white mt-4">Find more events</a>
+          </div>
+          <div class = "col-6 pr-5">
+            <!--Google Maps-->
+            <h2 class = "text-center mt-2 mb-3 font-weight-light" style = "color: #666666;">Events Near You</h2>
+            <div id="map" style="width: 100%; height: 70vh"></div>
+            {% if event_json %}
+              <!--{{event_json}}-->
+                <script>
+                  var event_json = "{% static event_json %}"
+              </script>
+              <script type="text/javascript" src = "{% static 'scripts/map.js' %}"> </script>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+  </div>
+{% endblock %}

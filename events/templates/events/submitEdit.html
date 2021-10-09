@@ -1,0 +1,16 @@
+{% extends 'webapp/base.html' %}
+<!-- Source: https://getbootstrap.com/docs/4.5/getting-started/introduction/ -->
+<!-- Documentation for bootstrap styling -->
+{% load static %}
+
+{% block content %}
+{% if worked %}
+    <h4 class = "text-center my-auto py-5" style = "color: #666666;">The event was edited.</h4>
+{% else %}
+    <h4 class = "text-center my-auto py-5" style = "color: #666666;">An error occurred. This page was accessed in an improper manner.</h4>
+{% endif %}
+    <form id = "home" action = "../../user" method ="get" class = "form-inline">
+        {% csrf_token %}
+        <button id ="btn-primary" onclick = "home.submit()"  name = "homeButton" class = "btn mx-auto text-white" style = "margin-left: 10px; margin-right: 10px">Return Home</button>
+    </form>
+{% endblock %}
